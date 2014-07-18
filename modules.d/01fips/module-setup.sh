@@ -24,6 +24,8 @@ installkernel() {
         _fipsmodules+="aes_s390 des_s390 prng sha256_s390 sha_common des_check_key ghash_s390 sha1_s390 sha512_s390"
     fi
 
+    _fipsmodules+="drbg"
+
     mkdir -m 0755 -p "${initdir}/etc/modprobe.d"
 
     for _mod in $_fipsmodules; do
