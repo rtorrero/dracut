@@ -124,6 +124,7 @@ install() {
         \
         $systemdsystemunitdir/slices.target \
         $systemdsystemunitdir/system.slice \
+        $systemdsystemunitdir/-.slice \
         \
         journalctl systemctl echo swapoff systemd-cgls systemd-tmpfiles
 
