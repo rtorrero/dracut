@@ -2,6 +2,18 @@
 
 # called by dracut
 check() {
+    swap_on_netdevice() {
+        local _dev
+        for _dev in "${swap_devs[@]}"; do
+            block_is_netdevice $_dev && return 0
+        done
+        return 1
+    }
+    if swap_on_netdevice; then
+        # Do not attempt resume on iscsi/nbd swap
+        return 255
+    fi
+
     # No point trying to support resume, if no swap partition exist
     [[ $hostonly ]] || [[ $mount_needs ]] && {
         for fs in "${host_fs_types[@]}"; do

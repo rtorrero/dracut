@@ -694,3 +694,27 @@ btrfs_devs() {
         printf -- "%s\n" "$_dev"
         done
 }
+
+# block_is_nbd <maj:min>
+# Check whether $1 is an nbd device
+block_is_nbd() {
+    [[ -b /dev/block/$1 && $1 == 43:* ]]
+}
+
+# block_is_iscsi <maj:min>
+# Check whether $1 is an nbd device
+block_is_iscsi() {
+    local _dev=$1
+    [[ -L "/sys/dev/block/$_dev" ]] || return
+    cd "$(readlink -f "/sys/dev/block/$_dev")" || return
+    until [[ -d sys || -d iscsi_session ]]; do
+        cd ..
+    done
+    [[ -d iscsi_session ]]
+}
+
+# block_is_netdevice <maj:min>
+# Check whether $1 is a net device
+block_is_netdevice() {
+    block_is_nbd "$1" || block_is_iscsi "$1"
+}
