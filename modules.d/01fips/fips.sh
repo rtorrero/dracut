@@ -73,8 +73,12 @@ do_fips()
     local _s
     local _v
     local _module
+    local _arch=$(uname -m)
+    local _vmname=vmlinuz
 
-    KERNEL=$(uname -r)
+    if [ "$_arch" == "s390x" ]; then
+        _vmname=image
+    fi
 
     FIPSMODULES=$(cat /etc/fipsmodules)
 
@@ -121,6 +125,7 @@ do_fips()
         do_rhevh_check /run/initramfs/live/isolinux/vmlinuz0 || return 1
     else
         BOOT_IMAGE="$(getarg BOOT_IMAGE)"
+        BOOT_IMAGE="${BOOT_IMAGE:-/${_vmname}-$(uname -r)}"
         [ -e "/boot/.${BOOT_IMAGE}.hmac" ] || BOOT_IMAGE="vmlinuz-${KERNEL}"
 
         if ! [ -e "/boot/.${BOOT_IMAGE}.hmac" ]; then
