@@ -73,10 +73,16 @@ do_fips()
     local _s
     local _v
     local _module
+    local _arch=$(uname -m)
+    local _vmname=vmlinuz
+
+    if [ "$_arch" == "s390x" ]; then
+        _vmname=image
+    fi
 
     KERNEL=$(uname -r)
     BOOT_IMAGE="$(getarg BOOT_IMAGE)"
-    BOOT_IMAGE="${BOOT_IMAGE:-/vmlinuz-${KERNEL}}"
+    BOOT_IMAGE="${BOOT_IMAGE:-/${_vmname}-${KERNEL}}"
     if ! [ -e "/boot/.${BOOT_IMAGE}.hmac" ] && ! [ -e "/boot/.vmlinuz-${KERNEL}.hmac" ]; then
         warn "/boot/.${BOOT_IMAGE}.hmac does not exist"
         return 1
