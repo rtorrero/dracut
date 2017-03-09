@@ -1,7 +1,7 @@
 #!/bin/sh
 
 MD_UUID=$(getargs rd.md.uuid -d rd_MD_UUID=)
-MD_RULES=/etc/udev/62-md-dracut-uuid.rules
+MD_RULES=/etc/udev/rules.d/62-md-dracut-uuid.rules
 
 if ( ! [ -n "$MD_UUID" ] && ! getargbool 0 rd.auto ) || ! getargbool 1 rd.md -d -n rd_NO_MD; then
     info "rd.md=0: removing MD RAID activation"
