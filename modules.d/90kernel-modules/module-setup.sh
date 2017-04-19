@@ -3,6 +3,32 @@
 # called by dracut
 installkernel() {
     if [[ -z $drivers ]]; then
+
+        driver_for_hostdev() {
+            local dev=$1
+            local devpath tgtnum hostnum procname
+            local modules
+
+            devpath=$(cd -P /sys/block/$dev/device; echo $PWD)
+            tgtnum=${devpath##*/}
+            hostnum=${tgtnum%%:*}
+            if [ ${tgtnum%%-*} != "vbd" ] ; then
+                if [ ! -d /sys/class/scsi_host/host$hostnum ] ; then
+                    echo "scsi host$hostnum not found"
+                    exit 1
+                fi
+                procname=$(cat /sys/class/scsi_host/host$hostnum/proc_name)
+                # some drivers do not include proc_name so we need a fallback
+                case "$procname" in
+                    "<NULL>" | "(null)")
+                        procname="$(readlink /sys/class/scsi_host/host${hostnum}/device/../driver)"
+                        procname="${procname##*/}"
+                esac
+
+                echo $procname
+            fi
+        }
+
         block_module_filter() {
             local _blockfuncs='ahci_platform_get_resources|ata_scsi_ioctl|scsi_add_host|blk_cleanup_queue|register_mtd_blktrans|scsi_esp_register|register_virtio_device|usb_stor_disconnect|mmc_add_host|sdhci_add_host'
             # subfunctions inherit following FDs
@@ -41,6 +67,8 @@ installkernel() {
             uhci-hcd \
             xhci-hcd xhci-pci xhci-plat-hcd \
             pinctrl-cherryview
+
+        for_each_host_dev_and_slaves driver_for_hostdev | instmods
 
         instmods \
             "=drivers/hid" \
