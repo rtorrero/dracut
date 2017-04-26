@@ -12,6 +12,7 @@ installkernel() {
             uhci-hcd \
             xhci-hcd xhci-pci xhci-plat-hcd \
             pinctrl-cherryview pwm-lpss pwm-lpss-platform \
+            "=drivers/phy" \
             "=drivers/hid" \
             "=drivers/tty/serial" \
             "=drivers/input/serio" \
