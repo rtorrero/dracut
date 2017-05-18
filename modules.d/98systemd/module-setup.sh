@@ -60,6 +60,8 @@ install() {
         $systemdsystemunitdir/remote-fs.target \
         $systemdsystemunitdir/remote-fs-pre.target \
         $systemdsystemunitdir/network.target \
+        $systemdsystemunitdir/network-pre.target \
+        $systemdsystemunitdir/network-online.target \
         $systemdsystemunitdir/nss-lookup.target \
         $systemdsystemunitdir/nss-user-lookup.target \
         $systemdsystemunitdir/poweroff.target \
