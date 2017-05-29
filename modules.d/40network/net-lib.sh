@@ -14,7 +14,7 @@ mask_to_prefix() {
     local prefix=0
     local OLDIFS="$IFS"
 
-    IFS=:
+    IFS=.
     set -- $mask
     IFS="$OLDIFS"
     for mask in $@ ; do
@@ -36,6 +36,7 @@ mask_to_prefix() {
             prefix=$(($prefix + 1))
         fi
     done
+    echo $prefix
 }
 
 iface_for_remote_addr() {
