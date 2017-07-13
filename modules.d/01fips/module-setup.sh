@@ -17,7 +17,7 @@ installkernel() {
         _fipsmodules="$(cat "${srcmods}/modules.fips")"
     else
         _fipsmodules="ansi_cprng arc4 authenc ccm "
-        _fipsmodules+="ctr cts deflate "
+        _fipsmodules+="ctr cts deflate drbg "
         _fipsmodules+="ecb fcrypt gcm ghash_generic khazad md4 michael_mic rmd128 "
         _fipsmodules+="rmd160 rmd256 rmd320 seed "
         _fipsmodules+="sha512_generic tcrypt tea wp512 xts "
@@ -26,7 +26,8 @@ installkernel() {
         _fipsmodules+="cmac vmac xcbc salsa20_generic salsa20_x86_64 camellia_generic camellia_x86_64 pcbc tgr192 anubis "
         _fipsmodules+="cast6_generic cast5_generic cast_common sha512_ssse3 serpent_sse2_x86_64 serpent_generic twofish_generic "
         _fipsmodules+="ablk_helper cryptd twofish_x86_64_3way lrw glue_helper twofish_x86_64 twofish_common blowfish_generic "
-        _fipsmodules+="blowfish_x86_64 blowfish_common des_generic cbc"
+        _fipsmodules+="blowfish_x86_64 blowfish_common des_generic cbc "
+        _fipsmodules+="algif_hash af_alg crypto_user "
     fi
 
     _fipsmodules+="drbg"
@@ -59,6 +60,14 @@ install() {
         .libcryptsetup.so.4.5.0.hmac .libcryptsetup.so.4.hmac \
         .libgcrypt.so.20.hmac \
         libfreeblpriv3.so libfreeblpriv3.chk
+
+    if [ -f /usr/lib64/libkcapi/.fipscheck.hmac ]; then
+        inst_simple /usr/lib64/libkcapi/.fipscheck.hmac
+        inst_simple /usr/lib64/libkcapi/fipscheck
+    else
+        inst_simple /usr/lib/libkcapi/.fipscheck.hmac
+        inst_simple /usr/lib/libkcapi/fipscheck
+    fi
 
     # we do not use prelink at SUSE
     #inst_multiple -o prelink
