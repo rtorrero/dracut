@@ -57,9 +57,15 @@ do_rhevh_check()
 {
     KERNEL=$(uname -r)
     kpath=${1}
-
+    FIPSCHECK=/usr/lib64/libkcapi/fipscheck
+    if [ ! -f $FIPSCHECK ]; then
+        FIPSCHECK=/usr/lib/libkcapi/fipscheck
+    fi
+    if [ ! -f $FIPSCHECK ]; then
+        FIPSCHECK=/usr/bin/fipscheck
+    fi
     # If we're on RHEV-H, the kernel is in /run/initramfs/live/vmlinuz0
-    if fipscheck $NEWROOT/boot/vmlinuz-${KERNEL} ; then
+    if $FIPSCHECK $NEWROOT/boot/vmlinuz-${KERNEL} ; then
         warn "HMAC sum mismatch"
         return 1
     fi
@@ -127,6 +133,14 @@ do_fips()
     elif [ -e "/run/initramfs/live/isolinux/vmlinuz0" ]; then
         do_rhevh_check /run/initramfs/live/isolinux/vmlinuz0 || return 1
     else
+        FIPSCHECK=/usr/lib64/libkcapi/fipscheck
+        if [ ! -f $FIPSCHECK ]; then
+            FIPSCHECK=/usr/lib/libkcapi/fipscheck
+        fi
+        if [ ! -f $FIPSCHECK ]; then
+            FIPSCHECK=/usr/bin/fipscheck
+        fi
+
         BOOT_IMAGE="$(getarg BOOT_IMAGE)"
         BOOT_IMAGE="${BOOT_IMAGE:-/${_vmname}-$(uname -r)}"
         [ -e "/boot/.${BOOT_IMAGE}.hmac" ] || BOOT_IMAGE="vmlinuz-${KERNEL}"
@@ -135,7 +149,7 @@ do_fips()
             warn "/boot/.${BOOT_IMAGE}.hmac does not exist"
             return 1
         fi
-        fipscheck "/boot/${BOOT_IMAGE}" || return 1
+        $FIPSCHECK "/boot/${BOOT_IMAGE}" || return 1
     fi
 
     info "All initrd crypto checks done"
