@@ -73,6 +73,7 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       fipscheck
 Requires:       libcryptsetup4-hmac
 Requires:       libgcrypt20-hmac
+Requires:       libkcapi-tools
 
 %description fips
 This package requires everything which is needed to build an
