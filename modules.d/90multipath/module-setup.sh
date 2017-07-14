@@ -93,7 +93,8 @@ install() {
         xdrgetprio \
         /etc/xdrdevices.conf \
         /etc/multipath.conf \
-        /etc/multipath/*
+        /etc/multipath/* \
+        /etc/multipath/conf.d/*
 
     inst $(command -v partx) /sbin/partx
 
