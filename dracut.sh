@@ -1620,4 +1620,10 @@ if (( maxloglvl >= 5 )); then
     fi
 fi
 
+sync $outfile 2> /dev/null
+if [ $? -ne 0 ] ; then
+    dinfo "dracut: sync operartion on newly created initramfs $outfile failed"
+    exit 1
+fi
+
 exit 0
