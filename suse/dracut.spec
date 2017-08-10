@@ -33,6 +33,7 @@ BuildRequires:  docbook-xsl-stylesheets
 BuildRequires:  libxslt
 BuildRequires:  suse-module-tools
 BuildRequires:  pkgconfig(systemd) >= 219
+BuildRequires:  pkgconfig(libkmod) >= 15
 Requires:       %{_bindir}/get_kernel_version
 Requires:       bash
 # systemd-sysvinit provides: poweroff, reboot, halt
