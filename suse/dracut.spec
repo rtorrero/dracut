@@ -103,7 +103,7 @@ chmod a+x modules.d/91zipl/install_zipl_cmdline.sh
   --systemdsystemunitdir=%{_unitdir}\
   --bashcompletiondir=%{_sysconfdir}/bash_completion.d\
   --libdir=%{_prefix}/lib
-make all CFLAGS="%{optflags}" %{?_smp_mflags}
+make all CFLAGS="-std=gnu99 $(pkg-config --cflags libkmod) %{optflags}" %{?_smp_mflags}
 
 %install
 make DESTDIR=%{buildroot} install %{?_smp_mflags}
