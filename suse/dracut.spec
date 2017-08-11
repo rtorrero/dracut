@@ -81,15 +81,6 @@ This package requires everything which is needed to build an
 initramfs with dracut, which does an integrity check of the kernel
 and its cryptography during startup.
 
-%package ima
-Summary:        Dracut modules to build a dracut initramfs with IMA
-Group:          System/Base
-Requires:       %{name} = %{version}-%{release}
-
-%description ima
-This package requires everything which is needed to build an
-initramfs with dracut, which tries to load an IMA policy during startup.
-
 %package tools
 Summary:        Tools to build a local initramfs
 Group:          System/Base
@@ -128,6 +119,8 @@ rm -fr %{buildroot}/%{dracutlibdir}/modules.d/05busybox
 
 # with systemd IMA and selinux modules do not make sense
 rm -fr %{buildroot}/%{dracutlibdir}/modules.d/96securityfs
+rm -fr %{buildroot}/%{dracutlibdir}/modules.d/97masterkey
+rm -fr %{buildroot}/%{dracutlibdir}/modules.d/98integrity
 
 # remove gentoo specific modules
 rm -fr %{buildroot}%{dracutlibdir}/modules.d/50gensplash
@@ -140,7 +133,6 @@ touch %{buildroot}%{_localstatedir}/log/dracut.log
 install -D -m 0644 dracut.conf.d/suse.conf.example %{buildroot}/usr/lib/dracut/dracut.conf.d/01-dist.conf
 install -m 0644 suse/99-debug.conf %{buildroot}%{_sysconfdir}/dracut.conf.d/99-debug.conf
 install -m 0644 dracut.conf.d/fips.conf.example %{buildroot}%{_sysconfdir}/dracut.conf.d/40-fips.conf
-install -m 0644 dracut.conf.d/ima.conf.example %{buildroot}%{_sysconfdir}/dracut.conf.d/40-ima.conf
 # bsc#915218
 %ifarch s390 s390x
 install -m 0644 suse/s390x_persistent_device.conf %{buildroot}%{_sysconfdir}/dracut.conf.d/10-s390x_persistent_device.conf
@@ -183,9 +175,6 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 %post fips
 %{?regenerate_initrd_post}
 
-%post ima
-%{?regenerate_initrd_post}
-
 %preun
 %service_del_preun purge-kernels.service
 
@@ -196,16 +185,10 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 %postun fips
 %{?regenerate_initrd_post}
 
-%postun ima 
-%{?regenerate_initrd_post}
-
 %posttrans
 %{?regenerate_initrd_posttrans}
 
 %posttrans fips
-%{?regenerate_initrd_posttrans}
-
-%posttrans ima
 %{?regenerate_initrd_posttrans}
 
 %files fips
@@ -214,13 +197,6 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 %config %{_sysconfdir}/dracut.conf.d/40-fips.conf
 %{dracutlibdir}/modules.d/01fips
 %{dracutlibdir}/modules.d/02fips-aesni
-
-%files ima
-%defattr(-,root,root,0755)
-%doc COPYING
-%config %{_sysconfdir}/dracut.conf.d/40-ima.conf
-%{dracutlibdir}/modules.d/97masterkey
-%{dracutlibdir}/modules.d/98integrity
 
 %files tools
 %defattr(-,root,root,0755)
