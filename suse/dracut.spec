@@ -118,7 +118,7 @@ make DESTDIR=%{buildroot} install %{?_smp_mflags}
 
 echo -e "#!/bin/bash\nDRACUT_VERSION=%{version}-%{release}" > %{buildroot}/%{dracutlibdir}/dracut-version.sh
 
-# use 00systemd-bootchart instead
+# use systemd-analyze instead, does not need dracut support
 rm -fr %{buildroot}/%{dracutlibdir}/modules.d/00bootchart
 
 # not supported
@@ -284,7 +284,6 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 
 %dir %{dracutlibdir}/modules.d
 %{dracutlibdir}/modules.d/00bash
-%{dracutlibdir}/modules.d/00systemd-bootchart
 %{dracutlibdir}/modules.d/00warpclock
 %{dracutlibdir}/modules.d/00systemd
 %{dracutlibdir}/modules.d/01systemd-initrd
