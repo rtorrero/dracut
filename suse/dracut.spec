@@ -84,6 +84,8 @@ and its cryptography during startup.
 Summary:        Dracut modules to build a dracut initramfs with IMA
 Group:          System/Base
 Requires:       %{name} = %{version}-%{release}
+Requires:       evmctl
+Requires:       keyutils
 
 %description ima
 This package requires everything which is needed to build an
