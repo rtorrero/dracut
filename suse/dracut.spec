@@ -71,7 +71,7 @@ Summary:        Dracut modules to build a dracut initramfs with an integrity che
 Group:          System/Base
 Requires:       %{name} = %{version}-%{release}
 Requires:       fipscheck
-Requires:       libcryptsetup4-hmac
+Requires:       libcryptsetup12-hmac
 Requires:       libgcrypt20-hmac
 Requires:       libkcapi-tools
 
