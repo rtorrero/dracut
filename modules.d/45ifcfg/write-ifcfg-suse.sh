@@ -95,12 +95,16 @@ for netup in /tmp/net.*.did-setup ; do
                     echo "PREFIXLEN='$mask'"
                 fi
             fi
-            if [ -n "$gw" ]; then
-                echo "GATEWAY='$gw'"
-            fi
         fi
         [ -n "$mtu" ] && echo "MTU='$mtu'"
     } > /tmp/ifcfg/ifcfg-$netif
+
+    {
+        if [ "$bootproto" = "static" ]; then
+            grep -v default /etc/sysconfig/network/routes 2>/dev/null
+            [ -n "$gw" ] && echo "default $gw - $netif"
+        fi
+    } > /tmp/ifcfg/routes
 
     # bridge needs different things written to ifcfg
     if [ -z "$bridge" ] && [ -z "$bond" ] && [ -z "$vlan" ]; then
