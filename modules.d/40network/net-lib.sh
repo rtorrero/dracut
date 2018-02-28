@@ -72,7 +72,7 @@ iface_for_mac() {
 # get the iface name for the given identifier - either a MAC, IP, or iface name
 iface_name() {
     case $1 in
-        ??:??:??:??:??:??|??-??-??-??-??-??) iface_for_mac $1 ;;
+        ??:??:??:??:??:??*|??-??-??-??-??-??*) iface_for_mac $1 ;;
         *:*:*|*.*.*.*) iface_for_ip $1 ;;
         *) echo $1 ;;
     esac
@@ -595,20 +595,16 @@ route_to_var() {
 }
 
 parse_ifname_opts() {
-    local IFS=:
-    set $1
-
-    case $# in
-        7)
+    if [ $# -gt 6 ]; then
             ifname_if=$1
+            shift
+            ifname_mac="$@"
+            ifname_mac="${ifname_mac// /:}"
             # udev requires MAC addresses to be lower case
-            ifname_mac=$(echo $2:$3:$4:$5:$6:$7 | sed 'y/ABCDEF/abcdef/')
-            ;;
-        *)
+            ifname_mac="$(echo $ifname_mac | sed 'y/ABCDEF/abcdef/')"
+    else
             die "Invalid arguments for ifname="
-            ;;
-    esac
-
+    fi
 }
 
 # some network driver need long time to initialize, wait before it's ready.
