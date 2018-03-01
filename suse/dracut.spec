@@ -339,6 +339,7 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 %{dracutlibdir}/modules.d/95terminfo
 %{dracutlibdir}/modules.d/95udev-rules
 %{dracutlibdir}/modules.d/95virtfs
+%{dracutlibdir}/modules.d/95qeth_rules
 %{dracutlibdir}/modules.d/97biosdevname
 %{dracutlibdir}/modules.d/98ecryptfs
 %{dracutlibdir}/modules.d/98pollcdrom
