@@ -127,6 +127,11 @@ rm -fr %{buildroot}/%{dracutlibdir}/modules.d/00bootchart
 rm -fr %{buildroot}/%{dracutlibdir}/modules.d/00dash
 rm -fr %{buildroot}/%{dracutlibdir}/modules.d/05busybox
 
+# Remove RH-specific s390 modules
+rm -fr %{buildroot}/%{dracutlibdir}/modules.d/95dasd
+rm -fr %{buildroot}/%{dracutlibdir}/modules.d/95zfcp
+rm -fr %{buildroot}/%{dracutlibdir}/modules.d/95znet
+
 # remove gentoo specific modules
 rm -fr %{buildroot}%{dracutlibdir}/modules.d/50gensplash
 
@@ -317,7 +322,6 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 %{dracutlibdir}/modules.d/91crypt-gpg
 %{dracutlibdir}/modules.d/91crypt-loop
 %{dracutlibdir}/modules.d/91zipl
-%{dracutlibdir}/modules.d/95znet
 %{dracutlibdir}/modules.d/95fcoe-uefi
 %{dracutlibdir}/modules.d/95nbd
 %{dracutlibdir}/modules.d/95nfs
@@ -329,12 +333,10 @@ ln -s %{dracutlibdir}/modules.d/45ifcfg/write-ifcfg-redhat.sh %{buildroot}/%{dra
 %{dracutlibdir}/modules.d/95resume
 %{dracutlibdir}/modules.d/95rootfs-block
 %{dracutlibdir}/modules.d/95dcssblk
-%{dracutlibdir}/modules.d/95dasd
 %{dracutlibdir}/modules.d/95dasd_mod
 %{dracutlibdir}/modules.d/95dasd_rules
 %{dracutlibdir}/modules.d/95fstab-sys
 %{dracutlibdir}/modules.d/95lunmask
-%{dracutlibdir}/modules.d/95zfcp
 %{dracutlibdir}/modules.d/95zfcp_rules
 %{dracutlibdir}/modules.d/95terminfo
 %{dracutlibdir}/modules.d/95udev-rules
