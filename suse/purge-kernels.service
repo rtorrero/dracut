@@ -2,6 +2,7 @@
 Description=Purge old kernels
 After=local-fs.target
 ConditionPathExists=/boot/do_purge_kernels
+ConditionPathIsReadWrite=/
 
 [Service]
 Type=oneshot
