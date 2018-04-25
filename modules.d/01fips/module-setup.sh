@@ -13,6 +13,12 @@ depends() {
 # called by dracut
 installkernel() {
     local _fipsmodules _mod
+    # The FIPS process requires that crypto primitives should perform a power-up self test. They must not be loaded and
+    # used prior to successful completion. FIPS140-2, section 4.9 mandates that during power-up, crypto algorithms should
+    # perform self tests, displaying an error if any one of them fails.
+
+    # dracut implements this by first compiling a blacklist (provided by the kernel in newer distros) and then
+    # load the modules in that list one by one in a controlled manner, aborting on failure.
     if [[ -f "${srcmods}/modules.fips" ]]; then
         _fipsmodules="$(cat "${srcmods}/modules.fips")"
     else
@@ -28,6 +34,7 @@ installkernel() {
         _fipsmodules+="ablk_helper cryptd twofish_x86_64_3way lrw glue_helper twofish_x86_64 twofish_common blowfish_generic "
         _fipsmodules+="blowfish_x86_64 blowfish_common des_generic cbc "
         _fipsmodules+="algif_hash af_alg crypto_user "
+        _fipsmodules+="sha3_generic "
     fi
 
     mkdir -m 0755 -p "${initdir}/etc/modprobe.d"
@@ -52,10 +59,10 @@ install() {
     inst_libdir_file \
         fipscheck .fipscheck.hmac \
          libfipscheck.so.1 \
-        .libfipscheck.so.1.hmac .libfipscheck.so.1.1.0.hmac \
-         libcrypto.so.1.0.0       libssl.so.1.0.0 \
-        .libcrypto.so.1.0.0.hmac .libssl.so.1.0.0.hmac \
-        .libcryptsetup.so.4.5.0.hmac .libcryptsetup.so.4.hmac \
+        .libfipscheck.so.1.hmac .libfipscheck.so.1.2.1.hmac \
+         libcrypto.so.1.1       libssl.so.1.1 \
+        .libcrypto.so.1.1.hmac .libssl.so.1.1.hmac \
+        .libcryptsetup.so.12.1.0.hmac .libcryptsetup.so.12.hmac \
         .libgcrypt.so.20.hmac \
         libfreeblpriv3.so libfreeblpriv3.chk
 
