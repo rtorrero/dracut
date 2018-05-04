@@ -1672,6 +1672,7 @@ if [[ $early_microcode = yes ]]; then
                 if [[ $hostonly ]]; then
                     _src=$(get_ucode_file)
                     [[ $_src ]] || break
+                    [[ -r $_fwdir/$_fw/${_src}.early ]] && _src=${_src}.early
                     [[ -r $_fwdir/$_fw/$_src ]] || break
                 fi
 
@@ -1683,6 +1684,7 @@ if [[ $early_microcode = yes ]]; then
                     [[ -e "$i" ]] || continue
                     # skip gpg files
                     str_ends "$i" ".asc" && continue
+                    [[ -r ${i}.early ]] && i=${i}.early
                     cat "$i" >> $_dest_dir/${ucode_dest[$idx]}
                 done
                 create_early_cpio="yes"
