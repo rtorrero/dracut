@@ -12,6 +12,7 @@ check() {
 
 # called by dracut
 depends() {
+    echo systemd dbus
     return 0
 }
 
