@@ -306,6 +306,7 @@ EOF
 %{dracutlibdir}/modules.d/03modsign
 %{dracutlibdir}/modules.d/03rescue
 %{dracutlibdir}/modules.d/04watchdog
+%{dracutlibdir}/modules.d/06dbus
 %{dracutlibdir}/modules.d/10i18n
 %{dracutlibdir}/modules.d/30convertfs
 %{dracutlibdir}/modules.d/35network-legacy
@@ -315,6 +316,7 @@ EOF
 %{dracutlibdir}/modules.d/45url-lib
 %{dracutlibdir}/modules.d/50drm
 %{dracutlibdir}/modules.d/50plymouth
+%{dracutlibdir}/modules.d/62bluetooth
 %{dracutlibdir}/modules.d/80cms
 %{dracutlibdir}/modules.d/80lvmmerge
 %{dracutlibdir}/modules.d/81cio_ignore
