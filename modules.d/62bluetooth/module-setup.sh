@@ -2,7 +2,7 @@
 
 # called by dracut
 check() {
-  require_binaries /usr/libexec/bluetooth/bluetoothd || return 1
+  require_any_binary /usr/libexec/bluetooth/bluetoothd /usr/lib/bluetooth/bluetoothd || return 1
 
   return 255
 }
@@ -41,6 +41,8 @@ install() {
     /usr/lib/systemd/system/bluetooth.service \
     /etc/bluetooth/main.conf \
     bluetoothctl
+
+  inst_any /usr/libexec/bluetooth/bluetoothd /usr/lib/bluetooth/bluetoothd
 
   inst_multiple $(find /var/lib/bluetooth)
 
