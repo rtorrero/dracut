@@ -505,7 +505,7 @@ while :; do
         --libdirs)     libdirs_l+=("$2");                     PARMS_TO_STORE+=" '$2'"; shift;;
         --fscks)       fscks_l+=("$2");                       PARMS_TO_STORE+=" '$2'"; shift;;
         --add-fstab)   add_fstab_l+=("$2");                   PARMS_TO_STORE+=" '$2'"; shift;;
-        --mount)       fstab_lines+=("$2");                   PARMS_TO_STORE+=" '$2'"; shift;;
+        --mount)       fstab_lines_l+=("$2");                 PARMS_TO_STORE+=" '$2'"; shift;;
         --add-device|--device) add_device_l+=("$2");          PARMS_TO_STORE+=" '$2'"; shift;;
         --kernel-cmdline) kernel_cmdline_l+=("$2");           PARMS_TO_STORE+=" '$2'"; shift;;
         --nofscks)     nofscks_l="yes";;
