@@ -157,7 +157,7 @@ dracut_no_switch_root() {
 }
 
 dracut_module_path() {
-    echo ${dracutbasedir}/modules.d/??${1} | { read a b; echo "$a"; }
+    echo "${dracutbasedir}/modules.d/??${1}" | { read a b; echo "$a"; }
 }
 
 if ! [[ $DRACUT_INSTALL ]]; then

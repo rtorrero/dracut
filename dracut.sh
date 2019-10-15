@@ -32,7 +32,7 @@ if (( BASH_VERSINFO[0] < 4 )); then
 fi
 
 dracut_args=( "$@" )
-readonly dracut_cmd="$(readlink -f $0)"
+readonly dracut_cmd="$(readlink -f "$0")"
 
 set -o pipefail
 
@@ -427,7 +427,7 @@ do
 	if [ "$1" == "--rebuild" ]; then
 	    append_args_l="yes"
             rebuild_file=$2
-            if [ ! -e $rebuild_file ]; then
+            if [ ! -e "$rebuild_file" ]; then
                 echo "Image file '$rebuild_file', for rebuild, does not exist!"
                 exit 1
             fi
@@ -465,7 +465,7 @@ if [[ $append_args_l == "yes" ]]; then
         outfile=$rebuild_file
     fi
 
-    if ! rebuild_param=$(lsinitrd $rebuild_file '*lib/dracut/build-parameter.txt'); then
+    if ! rebuild_param=$(lsinitrd "$rebuild_file" '*lib/dracut/build-parameter.txt'); then
         echo "Image '$rebuild_file' has no rebuild information stored"
         exit 1
     fi
@@ -484,7 +484,7 @@ PARMS_TO_STORE=""
 eval set -- "$TEMP"
 
 while :; do
-    if [ $1 != "--" ] && [ $1 != "--rebuild" ]; then
+    if [ "$1" != "--" ] && [ "$1" != "--rebuild" ]; then
         PARMS_TO_STORE+=" $1";
     fi
     case $1 in
@@ -517,7 +517,7 @@ while :; do
         --compress)    compress_l="$2";                PARMS_TO_STORE+=" '$2'"; shift;;
         --prefix)      prefix_l="$2";                  PARMS_TO_STORE+=" '$2'"; shift;;
         --loginstall)  loginstall_l="$2";              PARMS_TO_STORE+=" '$2'"; shift;;
-        --rebuild)     if [ $rebuild_file == $outfile ]; then
+        --rebuild)     if [ "$rebuild_file" == "$outfile" ]; then
                            force=yes
                        fi
                        shift
@@ -634,7 +634,7 @@ if [[ $regenerate_all == "yes" ]]; then
     ((len=${#dracut_args[@]}))
     for ((i=0; i < len; i++)); do
         [[ ${dracut_args[$i]} == "--regenerate-all" ]] && \
-            unset dracut_args[$i]
+            unset "dracut_args[$i]"
     done
 
     cd /lib/modules
@@ -705,7 +705,7 @@ DRACUT_PATH=${DRACUT_PATH:-/sbin /bin /usr/sbin /usr/bin}
 for i in $DRACUT_PATH; do
     rl=$i
     if [ -L "$i" ]; then
-        rl=$(readlink -f $i)
+        rl=$(readlink -f "$i")
     fi
     if [[ "$NPATH" != *:$rl* ]] ; then
         NPATH+=":$rl"
@@ -996,7 +996,7 @@ for ((i=0; i < ${#dracut_args[@]}; i++)); do
         #" keep vim happy
 done
 
-dinfo "Executing: $dracut_cmd ${dracut_args[@]}"
+dinfo "Executing: $dracut_cmd" "${dracut_args[@]}"
 
 [[ $do_list = yes ]] && {
     for mod in $dracutbasedir/modules.d/*; do
@@ -1732,7 +1732,7 @@ if [[ $acpi_override = yes ]] && [[ -d $acpi_table_dir ]]; then
 fi
 
 dinfo "*** Store current command line parameters ***"
-if ! ( echo $PARMS_TO_STORE > $initdir/lib/dracut/build-parameter.txt ); then
+if ! ( echo "$PARMS_TO_STORE" > $initdir/lib/dracut/build-parameter.txt ); then
     dfatal "Could not store the current command line parameters"
     exit 1
 fi
@@ -1796,7 +1796,7 @@ if dracut_module_included "squash"; then
         fi
 
         if [[ ! -d $(dirname $_init_file) ]]; then
-            required_in_root $(dirname $file)
+            required_in_root "$(dirname $file)"
         fi
 
         if [[ -L $_sqsh_file ]]; then
@@ -1960,7 +1960,7 @@ if [[ $uefi = yes ]]; then
     echo -ne "\x00" >> "$uefi_outdir/cmdline.txt"
 
     dinfo "Using UEFI kernel cmdline:"
-    dinfo $(tr -d '\000' < "$uefi_outdir/cmdline.txt")
+    dinfo "$(tr -d '\000' < "$uefi_outdir/cmdline.txt")"
 
     [[ -s /usr/lib/os-release ]] && uefi_osrelease="/usr/lib/os-release"
     [[ -s /etc/os-release ]] && uefi_osrelease="/etc/os-release"
