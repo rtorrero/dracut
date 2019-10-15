@@ -1850,13 +1850,12 @@ if dracut_module_included "squash"; then
 
     for folder in "${squash_candidate[@]}"; do
         # Remove duplicated files in squashfs image, save some more space
-        [[ ! -d $initdir/$folder/ ]] && continue
-        for file in $(find $initdir/$folder/ -not -type d);
-        do
-            if [[ -e $squash_dir${file#$initdir} ]]; then
-                mv $squash_dir${file#$initdir} $file
+        [[ ! -d "$initdir/$folder/" ]] && continue
+        while IFS= read -r -d '' file; do
+            if [[ -e "$squash_dir${file#$initdir}" ]]; then
+                mv "$squash_dir${file#$initdir}" "$file"
             fi
-        done
+        done < <(find "$initdir/$folder/" -not -type d -print0)
     done
 fi
 
