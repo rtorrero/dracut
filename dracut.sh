@@ -804,7 +804,7 @@ if ! [[ $outfile ]]; then
     else
         if [[ -e "/boot/vmlinuz-$kernel" ]]; then
             outfile="/boot/initramfs-$kernel.img"
-        elif [[ $MACHINE_ID ]] && ( [[ -d /boot/${MACHINE_ID} ]] || [[ -L /boot/${MACHINE_ID} ]] ); then
+        elif [[ $MACHINE_ID ]] && { [[ -d /boot/${MACHINE_ID} ]] || [[ -L /boot/${MACHINE_ID} ]]; }; then
             outfile="/boot/${MACHINE_ID}/$kernel/initrd"
         else
             outfile="/boot/initramfs-$kernel.img"
@@ -919,7 +919,7 @@ trap 'exit 1;' SIGINT
 readonly initdir="${DRACUT_TMPDIR}/initramfs"
 mkdir "$initdir"
 
-if [[ $early_microcode = yes ]] || ( [[ $acpi_override = yes ]] && [[ -d $acpi_table_dir ]] ); then
+if [[ $early_microcode = yes ]] || { [[ $acpi_override = yes ]] && [[ -d $acpi_table_dir ]]; }; then
     readonly early_cpio_dir="${DRACUT_TMPDIR}/earlycpio"
     mkdir "$early_cpio_dir"
 fi
