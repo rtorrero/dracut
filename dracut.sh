@@ -403,6 +403,7 @@ rearrange_params()
         --long no-machineid \
         -- "$@")
 
+    # shellcheck disable=SC2181
     if (( $? != 0 )); then
         usage
         exit 1
@@ -818,8 +819,7 @@ fw_dir=${fw_dir//:/ }
 # check for logfile and try to create one if it doesn't exist
 if [[ -n "$logfile" ]];then
     if [[ ! -f "$logfile" ]];then
-        touch "$logfile"
-        if [ ! $? -eq 0 ] ;then
+        if ! touch "$logfile"; then
             printf "%s\n" "dracut: touch $logfile failed." >&2
         fi
     fi
