@@ -637,7 +637,7 @@ if [[ $regenerate_all == "yes" ]]; then
             unset "dracut_args[$i]"
     done
 
-    cd /lib/modules
+    cd /lib/modules || dfatal "missing /lib/modules"
     for i in *; do
         [[ -f $i/modules.dep ]] || [[ -f $i/modules.dep.bin ]] || continue
         "$dracut_cmd" --kver="$i" "${dracut_args[@]}"
