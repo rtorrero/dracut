@@ -39,6 +39,7 @@ set -o pipefail
 usage() {
     [[ $dracutbasedir ]] || dracutbasedir=/usr/lib/dracut
     if [[ -f $dracutbasedir/dracut-version.sh ]]; then
+        # shellcheck source=./dracut-version.sh
         . $dracutbasedir/dracut-version.sh
     fi
 
@@ -64,6 +65,7 @@ EOF
 long_usage() {
     [[ $dracutbasedir ]] || dracutbasedir=/usr/lib/dracut
     if [[ -f $dracutbasedir/dracut-version.sh ]]; then
+        # shellcheck source=./dracut-version.sh
         . $dracutbasedir/dracut-version.sh
     fi
 
@@ -688,11 +690,13 @@ if [[ ! -d $confdir ]]; then
     fi
 fi
 
-# source our config file
+# source our config file, but no point in letting shellcheck source any
+# shellcheck disable=SC1090
 [[ -f $conffile ]] && . "$conffile"
 
 # source our config dir
 for f in $(dropindirs_sort ".conf" "$confdir" "$dracutbasedir/dracut.conf.d"); do
+    # shellcheck disable=SC1090
     [[ -e $f ]] && . "$f"
 done
 
@@ -930,10 +934,12 @@ if [[ $print_cmdline ]]; then
 fi
 
 if [[ -f $dracutbasedir/dracut-version.sh ]]; then
+    # shellcheck source=./dracut-version.sh
     . $dracutbasedir/dracut-version.sh
 fi
 
 if [[ -f $dracutbasedir/dracut-init.sh ]]; then
+    # shellcheck source=./dracut-init.sh
     . $dracutbasedir/dracut-init.sh
 else
     printf "%s\n" "dracut: Cannot find $dracutbasedir/dracut-init.sh." >&2

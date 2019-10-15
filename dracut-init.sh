@@ -39,6 +39,7 @@ if ! [[ $dracutbasedir ]]; then
 fi
 
 if ! is_func dinfo >/dev/null 2>&1; then
+    # shellcheck source=./dracut-logger.sh
     . "$dracutbasedir/dracut-logger.sh"
     dlog_init
 fi
@@ -79,6 +80,7 @@ export srcmods
     export hookdirs
 }
 
+# shellcheck source=./dracut-functions.sh
 . $dracutbasedir/dracut-functions.sh
 
 # Detect lib paths
