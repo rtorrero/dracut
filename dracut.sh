@@ -1551,13 +1551,13 @@ if [[ $kernel_only != yes ]]; then
     [[ $kernel_cmdline ]] && printf "%s\n" "$kernel_cmdline" >> "${initdir}/etc/cmdline.d/01-default.conf"
 
     for line in "${fstab_lines[@]}"; do
-        line=($line)
+        read -ra line <<< "$line"
 
         if [ -z "${line[1]}" ]; then
             # Determine device and mount options from current system
             mountpoint -q "${line[0]}" || derror "${line[0]} is not a mount point!"
-            line=($(findmnt --raw -n --target "${line[0]}" --output=source,target,fstype,options))
-            dinfo "Line for ${line[1]}: ${line[@]}"
+            read -ra line <<< "$(findmnt --raw -n --target "${line[0]}" --output=source,target,fstype,options)"
+            dinfo "Line for ${line[1]}:" "${line[@]}"
         else
             # Use default options
             [ -z "${line[3]}" ] && line[3]="defaults"
