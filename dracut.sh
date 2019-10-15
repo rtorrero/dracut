@@ -1665,6 +1665,7 @@ fi
 # strip binaries
 if [[ $do_strip = yes ]] ; then
     # Prefer strip from elfutils for package size
+    # shellcheck disable=SC2155
     declare strip_cmd=$(command -v eu-strip)
     test -z "$strip_cmd" && strip_cmd="strip"
 
