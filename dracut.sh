@@ -251,7 +251,7 @@ EOF
 push_host_devs() {
     local _dev
     for _dev in "$@"; do
-        [[ " ${host_devs[@]} " == *" $_dev "* ]] && return
+        [[ " ${host_devs[*]} " == *" $_dev "* ]] && return
         host_devs+=( "$_dev" )
     done
 }
@@ -716,20 +716,20 @@ export PATH="${NPATH#:}"
 unset NPATH
 
 # these options add to the stuff in the config file
-(( ${#add_dracutmodules_l[@]} )) && add_dracutmodules+=" ${add_dracutmodules_l[@]} "
-(( ${#force_add_dracutmodules_l[@]} )) && force_add_dracutmodules+=" ${force_add_dracutmodules_l[@]} "
-(( ${#fscks_l[@]} )) && fscks+=" ${fscks_l[@]} "
-(( ${#add_fstab_l[@]} )) && add_fstab+=" ${add_fstab_l[@]} "
-(( ${#fstab_lines_l[@]} )) && fstab_lines+=( "${fstab_lines_l[@]}" )
-(( ${#install_items_l[@]} )) && install_items+=" ${install_items_l[@]} "
-(( ${#install_optional_items_l[@]} )) && install_optional_items+=" ${install_optional_items_l[@]} "
+(( ${#add_dracutmodules_l[@]} )) && add_dracutmodules+=" ${add_dracutmodules_l[*]} "
+(( ${#force_add_dracutmodules_l[@]} )) && force_add_dracutmodules+=" ${force_add_dracutmodules_l[*]} "
+(( ${#fscks_l[@]} )) && fscks+=" ${fscks_l[*]} "
+(( ${#add_fstab_l[@]} )) && add_fstab+=" ${add_fstab_l[*]} "
+(( ${#fstab_lines_l[@]} )) && fstab_lines+=( "${fstab_lines_l[*]}" )
+(( ${#install_items_l[@]} )) && install_items+=" ${install_items_l[*]} "
+(( ${#install_optional_items_l[@]} )) && install_optional_items+=" ${install_optional_items_l[*]} "
 
 # these options override the stuff in the config file
-(( ${#dracutmodules_l[@]} )) && dracutmodules="${dracutmodules_l[@]}"
-(( ${#omit_dracutmodules_l[@]} )) && omit_dracutmodules="${omit_dracutmodules_l[@]}"
-(( ${#filesystems_l[@]} )) && filesystems="${filesystems_l[@]}"
-(( ${#fw_dir_l[@]} )) && fw_dir="${fw_dir_l[@]}"
-(( ${#libdirs_l[@]} ))&& libdirs="${libdirs_l[@]}"
+(( ${#dracutmodules_l[@]} )) && dracutmodules="${dracutmodules_l[*]}"
+(( ${#omit_dracutmodules_l[@]} )) && omit_dracutmodules="${omit_dracutmodules_l[*]}"
+(( ${#filesystems_l[@]} )) && filesystems="${filesystems_l[*]}"
+(( ${#fw_dir_l[@]} )) && fw_dir="${fw_dir_l[*]}"
+(( ${#libdirs_l[@]} ))&& libdirs="${libdirs_l[*]}"
 
 [[ $stdloglvl_l ]] && stdloglvl=$stdloglvl_l
 [[ ! $stdloglvl ]] && stdloglvl=4
@@ -1177,7 +1177,7 @@ for line in "${fstab_lines[@]}"; do
             dev=$(blkid -l -t PARTLABEL=${dev#PARTLABEL=} -o device)
             ;;
     esac
-    [ -z "$dev" ] && dwarn "Bad fstab entry $@" && continue
+    [ -z "$dev" ] && dwarn "Bad fstab entry $*" && continue
     if [[ "$3" == btrfs ]]; then
         for i in $(btrfs_devs "$2"); do
             push_host_devs "$i"
