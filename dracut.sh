@@ -2017,7 +2017,7 @@ if test -d /run/systemd/system; then
 
     # use fsfreeze only if we're not writing to /
     if [[ "$(stat -c %m -- "$outfile")" != "/" && "$(stat -f -c %T -- "$outfile")" != "msdos" ]]; then
-        if ! $(fsfreeze -f $(dirname "$outfile") 2>/dev/null && fsfreeze -u $(dirname "$outfile") 2>/dev/null); then
+        if ! (fsfreeze -f "$(dirname "$outfile")" 2>/dev/null && fsfreeze -u "$(dirname "$outfile")" 2>/dev/null); then
             dinfo "dracut: warning: could not fsfreeze $(dirname "$outfile")"
         fi
     fi
