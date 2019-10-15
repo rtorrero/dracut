@@ -265,9 +265,9 @@ read_arg() {
     # $3 = arg parameter
     local rematch='^[^=]*=(.*)$'
     if [[ $2 =~ $rematch ]]; then
-        read "$1" <<< "${BASH_REMATCH[1]}"
+        read -r "$1" <<< "${BASH_REMATCH[1]}"
     else
-        read "$1" <<< "$3"
+        read -r "$1" <<< "$3"
         # There is no way to shift our callers args, so
         # return 1 to indicate they should do it instead.
         return 1
@@ -772,7 +772,7 @@ stdloglvl=$((stdloglvl + verbosity_mod_l))
 
 if ! [[ $outfile ]]; then
     if [[ $machine_id != "no" ]]; then
-        [[ -f /etc/machine-id ]] && read MACHINE_ID < /etc/machine-id
+        [[ -f /etc/machine-id ]] && read -r MACHINE_ID < /etc/machine-id
     fi
 
     if [[ $uefi == "yes" ]]; then
@@ -1254,7 +1254,7 @@ if [[ $hostonly ]] && [[ "$hostonly_default_device" != "no" ]]; then
                 [[ "$_d" -ef "$dev" ]] || continue
 
                 if [[ -f /etc/crypttab ]]; then
-                    while read _mapper _a _p _o || [ -n "$_mapper" ]; do
+                    while read -r _mapper _a _p _o || [ -n "$_mapper" ]; do
                         [[ $_mapper = \#* ]] && continue
                         [[ "$_d" -ef /dev/mapper/"$_mapper" ]] || continue
                         [[ "$_o" ]] || _o="$_p"
