@@ -781,7 +781,7 @@ if ! [[ $outfile ]]; then
             exit 1
         fi
 
-        if [[ -n "$uefi_secureboot_key" && -n "$uefi_secureboot_cert" ]] && !command -v sbsign &>/dev/null; then
+        if [[ -n "$uefi_secureboot_key" && -n "$uefi_secureboot_cert" ]] && ! command -v sbsign &>/dev/null; then
             dfatal "Need 'sbsign' to create a signed UEFI executable"
             exit 1
         fi
