@@ -34,5 +34,12 @@ install() {
     inst_dir /var/lib/wicked
     inst_multiple /var/lib/wicked/*.xml
 
+    inst_multiple \
+        $systemdsystemunitdir/wickedd.service \
+        $systemdsystemunitdir/wickedd-auto4.service \
+        $systemdsystemunitdir/wickedd-dhcp4.service \
+        $systemdsystemunitdir/wickedd-dhcp6.service \
+        $systemdsystemunitdir/wickedd-nanny.service
+
     systemctl --root "$initdir" enable wickedd.service
 }
