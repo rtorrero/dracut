@@ -311,6 +311,7 @@ EOF
 %{dracutlibdir}/modules.d/30convertfs
 %{dracutlibdir}/modules.d/35network-legacy
 %{dracutlibdir}/modules.d/35network-manager
+%{dracutlibdir}/modules.d/35network-wicked
 %{dracutlibdir}/modules.d/40network
 %{dracutlibdir}/modules.d/45ifcfg
 %{dracutlibdir}/modules.d/45url-lib
