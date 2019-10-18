@@ -33,4 +33,6 @@ install() {
     inst_dir /usr/share/wicked
     inst_dir /var/lib/wicked
     inst_multiple /var/lib/wicked/*.xml
+
+    systemctl --root "$initdir" enable wickedd.service
 }
