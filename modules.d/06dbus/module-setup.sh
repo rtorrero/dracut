@@ -2,68 +2,52 @@
 
 # called by dracut
 check() {
-  require_binaries dbus-daemon || return 1
+    local _program
 
-  return 255
+    require_binaries wicked || return 1
+
+    # do not add this module by default
+    return 255
 }
 
+# called by dracut
 depends() {
-  echo systemd
-  return 0
+    echo systemd dbus
+    return 0
 }
 
+# called by dracut
+installkernel() {
+    return 0
+}
+
+# called by dracut
 install() {
-  local DBUS_SERVICE=/usr/lib/systemd/system/dbus.service
-  if [[ -e $DBUS_SERVICE ]]; then
-    if [[ -L $DBUS_SERVICE ]]; then
-      DBUS_SERVICE=$(readlink $DBUS_SERVICE)
-    fi
-  else
-    DBUS_SERVICE=/etc/systemd/system/dbus.service
-    if [[ -e $DBUS_SERVICE ]]; then
-      if [[ -L $DBUS_SERVICE ]]; then
-        DBUS_SERVICE=$(readlink $DBUS_SERVICE)
-      fi
-    else
-      echo "Could not find dbus.service";
-      exit 1
-    fi
-  fi
+    inst_hook cmdline 99 "$moddir/wicked-config.sh"
+    inst_hook initqueue/settled 99 "$moddir/wicked-run.sh"
 
-  inst_multiple \
-    $DBUS_SERVICE \
-    /usr/lib/systemd/system/dbus.socket \
-    /usr/bin/dbus-daemon \
-    /usr/bin/dbus-send
+    inst wicked wickedd wickedd-nanny
+    inst_multiple /etc/dbus-1/system.d/org.opensuse.Network*
+    inst_dir /etc/wicked/extensions
+    inst_dir /usr/lib/wicked
+    inst_dir /usr/share/wicked
+    inst_dir /var/lib/wicked
+    inst_multiple /var/lib/wicked/*.xml
 
-  inst_multiple $(find /usr/share/dbus-1)
-  inst_multiple $(find /etc/dbus-1)
-  inst_multiple $(find /var/lib/dbus)
+    wicked_units="
+        $systemdsystemunitdir/wickedd.service \
+        $systemdsystemunitdir/wicked.service \
+        $systemdsystemunitdir/wickedd-auto4.service \
+        $systemdsystemunitdir/wickedd-dhcp4.service \
+        $systemdsystemunitdir/wickedd-dhcp6.service \
+        $systemdsystemunitdir/wickedd-nanny.service"
 
-  inst_hook cleanup 99 "$moddir/dbus-cleanup.sh"
+    inst_multiple $wicked_units
 
-  grep '^dbus:' /etc/passwd >> "$initdir/etc/passwd"
-  grep '^dbus:' /etc/group >> "$initdir/etc/group"
+    for unit in $wicked_units; do
+        sed -i 's/^After=.*/After=dbus.service/g' $initdir/$unit
+        sed -i 's/^Wants=\(.*\)/Wants=\1 dbus.service/g' $initdir/$unit
+    done
 
-  systemctl --root "$initdir" enable $DBUS_SERVICE > /dev/null 2>&1
-
-  sed -i -e \
-'/^\[Unit\]/aDefaultDependencies=no\
-Conflicts=shutdown.target\
-Before=shutdown.target' \
-    "$initdir"$DBUS_SERVICE
-
-  sed -i -e \
-'/^\[Unit\]/aDefaultDependencies=no\
-Conflicts=shutdown.target\
-Before=shutdown.target
-/^\[Socket\]/aRemoveOnStop=yes' \
-    "$initdir"/usr/lib/systemd/system/dbus.socket
-
-  #We need to make sure that systemd-tmpfiles-setup.service->dbus.socket will not wait local-fs.target to start,
-  #If swap is encrypted, this would make dbus wait the timeout for the swap before loading. This could delay sysinit
-  #services that are dependent on dbus.service.
-  sed -i -Ee \
-    '/^After/s/(After[[:space:]]*=.*)(local-fs.target[[:space:]]*)(.*)/\1-\.mount \3/' \
-    "$initdir"/usr/lib/systemd/system/systemd-tmpfiles-setup.service
+    systemctl --root "$initdir" enable wicked.service
 }
