@@ -34,12 +34,19 @@ install() {
     inst_dir /var/lib/wicked
     inst_multiple /var/lib/wicked/*.xml
 
-    inst_multiple \
+    wicked_units="
         $systemdsystemunitdir/wickedd.service \
         $systemdsystemunitdir/wickedd-auto4.service \
         $systemdsystemunitdir/wickedd-dhcp4.service \
         $systemdsystemunitdir/wickedd-dhcp6.service \
-        $systemdsystemunitdir/wickedd-nanny.service
+        $systemdsystemunitdir/wickedd-nanny.service"
+
+    inst_multiple $wicked_units
+
+    for unit in $wicked_units; do
+        sed -i 's/^After=.*/After=dbus.service/g' $initdir/$unit
+        sed -i 's/^Wants=\(.*\)/Wants=\1 dbus.service/g' $initdir/$unit
+    done
 
     systemctl --root "$initdir" enable wickedd.service
 }
