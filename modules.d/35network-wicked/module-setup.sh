@@ -24,7 +24,9 @@ installkernel() {
 # called by dracut
 install() {
     inst_hook cmdline 99 "$moddir/wicked-config.sh"
-    inst_hook initqueue/settled 99 "$moddir/wicked-run.sh"
+
+    # Seems to not execute if in initqueue/settled
+    inst_hook pre-mount 99 "$moddir/wicked-run.sh"
 
     # some utils we may need to debug
     inst /usr/bin/ps /usr/bin/grep /usr/bin/less
