@@ -24,15 +24,25 @@ installkernel() {
 # called by dracut
 install() {
     inst_hook cmdline 99 "$moddir/wicked-config.sh"
-    inst_hook initqueue/settled 99 "$moddir/wicked-run.sh"
 
-    inst wicked wickedd wickedd-nanny
-    inst_multiple /etc/dbus-1/system.d/org.opensuse.Network*
+    # Seems to not execute if in initqueue/settled
+    inst_hook pre-mount 99 "$moddir/wicked-run.sh"
+
+    # some utils we may need to debug
+    inst /usr/bin/ps /usr/bin/grep /usr/bin/less
+
     inst_dir /etc/wicked/extensions
-    inst_dir /usr/lib/wicked
-    inst_dir /usr/share/wicked
+    inst_dir /usr/share/wicked/schema
+    inst_dir /usr/lib/wicked/bin
     inst_dir /var/lib/wicked
-    inst_multiple /var/lib/wicked/*.xml
+
+    inst_multiple /etc/wicked/*.xml
+    inst_multiple /etc/wicked/extensions/*
+    inst_multiple /etc/dbus-1/system.d/org.opensuse.Network*
+    inst_multiple /usr/share/wicked/schema/*
+    inst_multiple /usr/lib/wicked/bin/*
+    inst_multiple /usr/sbin/wicked*
+    inst_multiple /var/lib/wicked/{duid,iaid}.xml
 
     wicked_units="
         $systemdsystemunitdir/wickedd.service \
@@ -48,5 +58,7 @@ install() {
         sed -i 's/^Wants=\(.*\)/Wants=\1 dbus.service/g' $initdir/$unit
     done
 
-    systemctl --root "$initdir" enable wickedd.service
+    # FIXME: do not activate yet, we need DefaultDependencies=no
+    # + much more tweaks to the Wants / After / Before tags
+    #systemctl --root "$initdir" enable wickedd.service
 }
