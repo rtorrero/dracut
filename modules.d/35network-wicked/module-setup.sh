@@ -36,7 +36,6 @@ install() {
 
     wicked_units="
         $systemdsystemunitdir/wickedd.service \
-        $systemdsystemunitdir/wicked.service \
         $systemdsystemunitdir/wickedd-auto4.service \
         $systemdsystemunitdir/wickedd-dhcp4.service \
         $systemdsystemunitdir/wickedd-dhcp6.service \
@@ -49,5 +48,5 @@ install() {
         sed -i 's/^Wants=\(.*\)/Wants=\1 dbus.service/g' $initdir/$unit
     done
 
-    systemctl --root "$initdir" enable wicked.service
+    systemctl --root "$initdir" enable wickedd.service
 }
