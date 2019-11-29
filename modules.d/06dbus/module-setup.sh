@@ -36,8 +36,10 @@ install() {
     /usr/bin/dbus-daemon \
     /usr/bin/dbus-send
 
-  inst_multiple $(find /usr/share/dbus-1)
-  inst_multiple $(find /etc/dbus-1)
+  inst_dir      /usr/share/dbus-1/system-services
+  inst_multiple /usr/share/dbus-1/system.conf
+  inst_dir      /etc/dbus-1/system.d
+  inst_multiple /etc/dbus-1/system.conf
   inst_multiple $(find /var/lib/dbus)
 
   inst_hook cleanup 99 "$moddir/dbus-cleanup.sh"
@@ -45,7 +47,8 @@ install() {
   grep '^dbus:' /etc/passwd >> "$initdir/etc/passwd"
   grep '^dbus:' /etc/group >> "$initdir/etc/group"
 
-  systemctl --root "$initdir" enable $DBUS_SERVICE > /dev/null 2>&1
+  # do not enable -- this is a static service
+  #systemctl --root "$initdir" enable $DBUS_SERVICE > /dev/null 2>&1
 
   sed -i -e \
 '/^\[Unit\]/aDefaultDependencies=no\
