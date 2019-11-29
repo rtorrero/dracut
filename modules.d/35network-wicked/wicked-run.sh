@@ -1,6 +1,4 @@
 #!/bin/sh
 
-systemctl start wickedd
-# detection wrapper around ifup --ifconfig "final xml" all
-wicked bootstrap --ifconfig /tmp/dracut.xml all
-systemctl stop wickedd
+wicked bootstrap --ifconfig dracut:cmdline:/run/wicked/bootstrap.cmdline --ifconfig firmware: all
+

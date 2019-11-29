@@ -36,14 +36,27 @@ install() {
     /usr/bin/dbus-daemon \
     /usr/bin/dbus-send
 
-  inst_multiple $(find /usr/share/dbus-1)
-  inst_multiple $(find /etc/dbus-1)
+  dbus_system_services="
+        org.freedesktop.systemd1
+        org.freedesktop.timedate1
+        org.freedesktop.hostname1
+  "
+  inst_dir      /etc/dbus-1/system.d
+  inst_dir      /usr/share/dbus-1/services
+  inst_dir      /usr/share/dbus-1/system-services
+  inst_multiple /etc/dbus-1/system.conf
+  inst_multiple /usr/share/dbus-1/system.conf \
+                /usr/share/dbus-1/services/org.freedesktop.systemd1.service
+  for service in $dbus_system_services ; do
+      inst_multiple        /etc/dbus-1/system.d/${service}.conf \
+              /usr/share/dbus-1/system-services/${service}.service
+  done
   inst_multiple $(find /var/lib/dbus)
 
   inst_hook cleanup 99 "$moddir/dbus-cleanup.sh"
 
-  grep '^dbus:' /etc/passwd >> "$initdir/etc/passwd"
-  grep '^dbus:' /etc/group >> "$initdir/etc/group"
+  grep -E -- '^dbus|^messagebus' /etc/passwd >> "$initdir/etc/passwd"
+  grep -E -- '^dbus|^messagebus' /etc/group >> "$initdir/etc/group"
 
   systemctl --root "$initdir" enable $DBUS_SERVICE > /dev/null 2>&1
 
