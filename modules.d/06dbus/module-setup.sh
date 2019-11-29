@@ -55,8 +55,8 @@ install() {
 
   inst_hook cleanup 99 "$moddir/dbus-cleanup.sh"
 
-  grep '^dbus:' /etc/passwd >> "$initdir/etc/passwd"
-  grep '^dbus:' /etc/group >> "$initdir/etc/group"
+  grep '^messagebus:' /etc/passwd >> "$initdir/etc/passwd"
+  grep '^messagebus:' /etc/group >> "$initdir/etc/group"
 
   # do not enable -- this is a static service
   #systemctl --root "$initdir" enable $DBUS_SERVICE > /dev/null 2>&1
