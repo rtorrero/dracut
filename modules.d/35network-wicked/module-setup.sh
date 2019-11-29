@@ -28,9 +28,6 @@ install() {
     # Seems to not execute if in initqueue/settled
     inst_hook pre-mount 99 "$moddir/wicked-run.sh"
 
-    # some utils we may need to debug
-    inst /usr/bin/ps /usr/bin/grep /usr/bin/less
-
     inst_dir /etc/wicked/extensions
     inst_dir /usr/share/wicked/schema
     inst_dir /usr/lib/wicked/bin
@@ -42,7 +39,6 @@ install() {
     inst_multiple /usr/share/wicked/schema/*
     inst_multiple /usr/lib/wicked/bin/*
     inst_multiple /usr/sbin/wicked*
-    inst_multiple /var/lib/wicked/{duid,iaid}.xml
 
     wicked_units="
         $systemdsystemunitdir/wickedd.service \
@@ -56,9 +52,10 @@ install() {
     for unit in $wicked_units; do
         sed -i 's/^After=.*/After=dbus.service/g' $initdir/$unit
         sed -i 's/^Wants=\(.*\)/Wants=\1 dbus.service/g' $initdir/$unit
+        sed -i -e \
+            '/^\[Unit\]/aDefaultDependencies=no\
+            Conflicts=shutdown.target\
+            Before=shutdown.target' \
+                "$initdir"$unit
     done
-
-    # FIXME: do not activate yet, we need DefaultDependencies=no
-    # + much more tweaks to the Wants / After / Before tags
-    #systemctl --root "$initdir" enable wickedd.service
 }
