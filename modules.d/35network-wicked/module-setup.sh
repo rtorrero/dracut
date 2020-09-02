@@ -37,7 +37,9 @@ install() {
     inst_multiple /etc/wicked/extensions/*
     inst_multiple /etc/dbus-1/system.d/org.opensuse.Network*
     inst_multiple /usr/share/wicked/schema/*
-    inst_multiple /usr/lib/wicked/bin/*
+    inst_any /usr/lib/wicked/bin/wickedd-auto4 /usr/libexec/wicked/bin/wickedd-auto4
+    inst_any /usr/lib/wicked/bin/wickedd-dhcp4 /usr/libexec/wicked/bin/wickedd-dhcp4
+    inst_any /usr/lib/wicked/bin/wickedd-dhcp6 /usr/libexec/wicked/bin/wickedd-dhcp6
     inst_multiple /usr/sbin/wicked*
 
     wicked_units="
