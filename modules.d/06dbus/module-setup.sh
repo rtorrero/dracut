@@ -48,7 +48,7 @@ install() {
   inst_multiple /usr/share/dbus-1/system.conf \
                 /usr/share/dbus-1/services/org.freedesktop.systemd1.service
   for service in $dbus_system_services ; do
-      inst_multiple        /etc/dbus-1/system.d/${service}.conf \
+      inst_multiple        /usr/share/dbus-1/system.d/${service}.conf \
               /usr/share/dbus-1/system-services/${service}.service
   done
   inst_multiple $(find /var/lib/dbus)
