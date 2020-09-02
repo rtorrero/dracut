@@ -36,11 +36,13 @@ install() {
     /usr/bin/dbus-daemon \
     /usr/bin/dbus-send
 
-  dbus_system_services="
-        org.freedesktop.systemd1
-        org.freedesktop.timedate1
-        org.freedesktop.hostname1
-  "
+  #dbus_system_services="
+  #      org.freedesktop.systemd1
+  #      org.freedesktop.timedate1
+  #      org.freedesktop.hostname1
+  #"
+  dbus_system_services=""
+
   inst_dir      /etc/dbus-1/system.d
   inst_dir      /usr/share/dbus-1/services
   inst_dir      /usr/share/dbus-1/system-services
